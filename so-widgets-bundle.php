@@ -893,13 +893,16 @@ class SiteOrigin_Widgets_Bundle {
 	 * @return string
 	 */
 	public function include_widgets_css_in_autoptimize( $excluded, $content ) {
+		
+		if (empty($excluded)) return $excluded;
+		
 		require_once ABSPATH . 'wp-admin/includes/file.php';
-
+		
 		$excl = array_map( 'trim', explode( ',', $excluded ) );
 		$add = array();
 		$uploads_dir = wp_upload_dir();
 		foreach ( $excl as $index => $path ) {
-			if ( strpos( $uploads_dir['basedir'], untrailingslashit( $path ) ) !== false ) {
+			if ( $path && strpos( $uploads_dir['basedir'], untrailingslashit( $path ) ) !== false ) {
 				// Iterate over items in uploads and add to excluded, except for the 'siteorigin-widgets' folder.
 				$excl[ $index ] = '';
 				$uploads_items  = list_files( $uploads_dir['basedir'], 1, array( 'siteorigin-widgets' ) );
